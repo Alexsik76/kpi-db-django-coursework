@@ -18,7 +18,7 @@ services:
     env_file:
       - .env
     volumes:
-      - pg_volume:/var/lib/postgresql/data
+      - pg-volume:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 1s
@@ -31,5 +31,4 @@ services:
     ports:
       - "8060:8080"
 volumes:
-  pg_volume:
-    external: true
+  pg-volume:
