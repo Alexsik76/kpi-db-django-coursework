@@ -24,12 +24,17 @@ class Person(models.Model):
 
 
 class Tourist(Person):
-    group = models.ForeignKey('Group', on_delete=models.CASCADE)
-    category = models.ForeignKey('Complexity', on_delete=models.CASCADE)
+    group = models.ForeignKey('Group', null=True, blank=True, on_delete=models.SET_NULL)
+
 
 
 class Amateur(Tourist):
-    pass
+    COMPLEXITY = {
+        1: "Початкова",
+        2: "Середня",
+        3: "Висока"
+    }
+    qualification = models.IntegerField(choices=COMPLEXITY, default=1)
 
 
 class Sportsman(Tourist):
@@ -37,8 +42,14 @@ class Sportsman(Tourist):
 
 
 class Section(models.Model):
+    SPECS = {
+        1: "водники",
+        2: "спелеологи",
+        3: "альпіністи",
+        4: "пішоходи"
+    }
     name = models.CharField(max_length=30, unique=True)
-    type = models.ForeignKey('Specs', on_delete=models.CASCADE)
+    type = models.IntegerField(choices=SPECS, default=4)
 
 
 class Administration(models.Model):
@@ -49,20 +60,16 @@ class Administration(models.Model):
     )
 
 
-class Specs(models.Model):
+class Coach(Tourist):
     SPECS = {
         1: "водники",
         2: "спелеологи",
         3: "альпіністи",
         4: "пішоходи"
     }
-    value = models.IntegerField(choices=SPECS.items(), default=41)
-
-
-class Coach(Tourist):
     administration = models.ForeignKey(Administration, on_delete=models.CASCADE)
-    salary = models.DecimalField(max_digits=20, decimal_places=2)
-    spec = models.ForeignKey(Specs, on_delete=models.CASCADE)
+    salary = models.DecimalField(max_digits=20, decimal_places=2, default=1000)
+    spec = models.IntegerField(choices=SPECS, default=4)
 
 
 class Manager(Person):
@@ -71,12 +78,12 @@ class Manager(Person):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    salary = models.DecimalField(max_digits=20, decimal_places=2)
+    salary = models.DecimalField(max_digits=20, decimal_places=2, default=1000)
 
 
 class Group(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
-    coach = models.ForeignKey(Coach, related_name='groups', on_delete=models.CASCADE)
+    coach = models.ForeignKey(Coach, related_name='groups', null=True, blank=True, on_delete=models.SET_NULL)
 
 
 class Event(models.Model):
@@ -101,7 +108,7 @@ class Training(Event):
 
 class Instructor(models.Model):
     coach = models.ForeignKey(Coach, on_delete=models.CASCADE, null=True, blank=True)
-    sportsman = models.ForeignKey(Sportsman, on_delete=models.CASCADE, null=True, blank=True)
+    sportsman = models.ForeignKey(Sportsman, null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         constraints = [
@@ -126,29 +133,21 @@ class Route(models.Model):
     distance = models.IntegerField(null=False)
 
 
-class Complexity(models.Model):
+class Tour(Event):
     COMPLEXITY = {
         1: "Початкова",
         2: "Середня",
         3: "Висока"
     }
-    value = models.IntegerField(choices=COMPLEXITY, default=1)
-
-
-class Spec(models.Model):
     TYPES = {
         1: "піший",
         2: "кінний",
         3: "водний",
         4: "гірський"
     }
-    value = models.IntegerField(choices=TYPES, default=1)
-
-
-class Tour(Event):
     instructor = models.ForeignKey('Person', on_delete=models.CASCADE)
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     duration = models.IntegerField(null=False)
-    complexity = models.OneToOneField(Complexity, on_delete=models.CASCADE)
-    type = models.ForeignKey(Spec, on_delete=models.CASCADE)
+    complexity = models.IntegerField(choices=COMPLEXITY, default=1)
+    type = models.IntegerField(choices=TYPES, default=1)
     tourists = models.ManyToManyField(Tourist, related_name='tours')
