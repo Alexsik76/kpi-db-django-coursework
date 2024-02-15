@@ -33,4 +33,5 @@ services:
 
 volumes:
   pg-db:
+    external: true
     driver: local

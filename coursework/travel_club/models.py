@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class Person(models.Model):
@@ -9,8 +10,8 @@ class Person(models.Model):
     }
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    gender = models.IntegerField(choices=GENDERS, default=1)
-    birth_date = models.DateField()
+    gender = models.IntegerField(choices=GENDERS, default=1, verbose_name = _('gender'))
+    birth_date = models.DateField(verbose_name = _('date of birth'))
 
     @property
     def age(self):
@@ -25,7 +26,6 @@ class Person(models.Model):
 
 class Tourist(Person):
     group = models.ForeignKey('Group', null=True, blank=True, on_delete=models.SET_NULL)
-
 
 
 class Amateur(Tourist):
@@ -54,7 +54,7 @@ class Section(models.Model):
 
 class Administration(models.Model):
     section = models.OneToOneField(
-        Section,
+        'Section',
         on_delete=models.CASCADE,
         primary_key=True,
     )
@@ -67,14 +67,18 @@ class Coach(Tourist):
         3: "альпіністи",
         4: "пішоходи"
     }
-    administration = models.ForeignKey(Administration, on_delete=models.CASCADE)
-    salary = models.DecimalField(max_digits=20, decimal_places=2, default=1000)
+    administration = models.ForeignKey('Administration', on_delete=models.CASCADE, verbose_name = _('Coach|administration'))
+    salary = models.DecimalField(max_digits=20, decimal_places=2, default=1000, verbose_name = _('Coach|salary'))
     spec = models.IntegerField(choices=SPECS, default=4)
+
+    class Meta:
+        verbose_name = _('coach')
+        verbose_name_plural = _('coaches')
 
 
 class Manager(Person):
     administration = models.OneToOneField(
-        Administration,
+        'Administration',
         on_delete=models.CASCADE,
         primary_key=True,
     )
@@ -82,8 +86,8 @@ class Manager(Person):
 
 
 class Group(models.Model):
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
-    coach = models.ForeignKey(Coach, related_name='groups', null=True, blank=True, on_delete=models.SET_NULL)
+    section = models.ForeignKey('Section', on_delete=models.CASCADE)
+    coach = models.ForeignKey('Coach', related_name='groups', null=True, blank=True, on_delete=models.SET_NULL)
 
 
 class Event(models.Model):
@@ -99,16 +103,16 @@ class Event(models.Model):
 
 
 class Competition(Event):
-    athletes = models.ManyToManyField(Sportsman)
+    athletes = models.ManyToManyField('Sportsman')
 
 
 class Training(Event):
-    sections = models.ManyToManyField(Section)
+    sections = models.ManyToManyField('Section')
 
 
 class Instructor(models.Model):
-    coach = models.ForeignKey(Coach, on_delete=models.CASCADE, null=True, blank=True)
-    sportsman = models.ForeignKey(Sportsman, null=True, blank=True, on_delete=models.SET_NULL)
+    coach = models.ForeignKey('Coach', on_delete=models.CASCADE, null=True, blank=True)
+    sportsman = models.ForeignKey('Sportsman', null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         constraints = [
@@ -127,9 +131,9 @@ class Place(models.Model):
 
 
 class Route(models.Model):
-    from_place = models.ForeignKey(Place, related_name='routes_from', on_delete=models.CASCADE)
-    to_place = models.ForeignKey(Place, related_name='routes_to', on_delete=models.CASCADE)
-    places = models.ManyToManyField(Place, related_name='routes_point')
+    from_place = models.ForeignKey('Place', related_name='routes_from', on_delete=models.CASCADE)
+    to_place = models.ForeignKey('Place', related_name='routes_to', on_delete=models.CASCADE)
+    places = models.ManyToManyField('Place', related_name='routes_point')
     distance = models.IntegerField(null=False)
 
 
@@ -146,8 +150,8 @@ class Tour(Event):
         4: "гірський"
     }
     instructor = models.ForeignKey('Person', on_delete=models.CASCADE)
-    route = models.ForeignKey(Route, on_delete=models.CASCADE)
+    route = models.ForeignKey('Route', on_delete=models.CASCADE)
     duration = models.IntegerField(null=False)
     complexity = models.IntegerField(choices=COMPLEXITY, default=1)
     type = models.IntegerField(choices=TYPES, default=1)
-    tourists = models.ManyToManyField(Tourist, related_name='tours')
+    tourists = models.ManyToManyField('Tourist', related_name='tours')

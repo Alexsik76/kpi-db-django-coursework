@@ -1,2 +1,5 @@
 Django == 5.0.2
 psycopg[binary]
+django-bootstrap5
+django-filter
+django-debug-toolbar
