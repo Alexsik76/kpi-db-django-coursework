@@ -11,7 +11,7 @@ class Person(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     gender = models.IntegerField(choices=GENDERS, default=1, verbose_name=_('gender'))
-    birth_date = models.DateField(verbose_name = _('date of birth'))
+    birth_date = models.DateField(verbose_name=_('date of birth'))
 
     @property
     def age(self):
@@ -23,6 +23,9 @@ class Person(models.Model):
         )
         return age
 
+    @property
+    def gender_display(self):
+        return self.GENDERS[self.gender]
 
 class Tourist(Person):
     group = models.ForeignKey('Group', null=True, blank=True, on_delete=models.SET_NULL)
@@ -51,6 +54,9 @@ class Section(models.Model):
     name = models.CharField(max_length=30, unique=True)
     type = models.IntegerField(choices=SPECS, default=4)
 
+    @property
+    def type_display(self):
+        return self.SPECS[self.type]
 
 class Administration(models.Model):
     section = models.OneToOneField(

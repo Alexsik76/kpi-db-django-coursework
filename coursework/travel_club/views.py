@@ -16,7 +16,7 @@ class UmlPageView(TemplateView):
 def tourist_list(request):
     field_list = ['first_name', 'last_name', 'gender', 'birth_date']
     tourists = Tourist.objects.values_list(*field_list)
-    f = TouristFilter(request.GET, queryset=tourists.all())
+    f = TouristFilter(request.GET, queryset=Tourist.objects)
     return render(request, 'tourists_list.html', {'filter': f})
 
 

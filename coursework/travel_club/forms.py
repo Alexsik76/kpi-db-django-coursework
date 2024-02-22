@@ -22,8 +22,8 @@ GENDERS = {
 
 class TouristFilterForm(forms.Form):
     section = forms.ModelChoiceField(queryset=Section.objects.all(), required=False)
-    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False)
-    gender= forms.ChoiceField(choices=GENDERS, required=False)
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, )
+    gender = forms.ChoiceField(choices=GENDERS, required=False)
     birth_date = forms.DateField(required=False)
     age = forms.IntegerField(required=False)
 

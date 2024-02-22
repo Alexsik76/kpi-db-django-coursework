@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import (Amateur, Sportsman, Coach, Section, Administration, Manager, Group, Event, Competition,
-                     Training, Instructor, Place, Route, Tour)
+                     Training, Instructor, Place, Route, Tour, Person)
 
 
 admin.site.register([Sportsman, Administration, Manager, Event, Competition,
-                     Training, Instructor, Place, Route, Tour])
+                     Training, Instructor, Place, Route, Tour, Person])
 
 
 class AmateurAdmin(admin.ModelAdmin):
