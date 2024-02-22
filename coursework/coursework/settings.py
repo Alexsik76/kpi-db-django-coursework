@@ -28,9 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+if DEBUG:
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 # Application definition
 
 INSTALLED_APPS = [
@@ -87,8 +88,8 @@ DATABASES = {
         'NAME': 'travel_club_db',
         'USER': 'db_admin',
         'PASSWORD': 'password',
-        'HOST': '192.168.88.71',
-        'PORT': '5444',
+        'HOST': os.environ.get('DB_HOST', '192.168.88.71'),
+        'PORT': os.environ.get('DB_PORT', '5444'),
     }
 }
 

@@ -15,12 +15,24 @@
     </div>
     <div class="container py-2">
         <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Прізвище</th>
+                <th>Ім'я</th>
+                <th>стать</th>
+                <th>вік</th>
+                <th>спеціалізація</th>
+            </tr>
+            </thead>
             {% for obj in filter.qs %}
                 <tr>
-                    {% for value in obj %}
-                        <td>{{ value }}</td>
-                    {% endfor %}
+                    <td>{{ obj.first_name }}</td>
+                    <td>{{ obj.last_name }}</td>
+                    <td>{{ obj.gender_display }}</td>
+                    <td>{{ obj.age }}</td>
+                    <td> {{ obj.group.section.type_display }}</td>
                 </tr>
+
             {% endfor %}
         </table>
     </div>

@@ -9,16 +9,18 @@ services:
     env_file:
       - .env
     depends_on:
-      db:
+      course_db:
         condition: service_healthy
     command: python manage.py runserver 0.0.0.0:8050
-  db:
+  course_db:
     image: postgres
     restart: always
     env_file:
       - .env
     volumes:
       - pg-db:/var/lib/postgresql/data
+    ports:
+      - "5444:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 1s
