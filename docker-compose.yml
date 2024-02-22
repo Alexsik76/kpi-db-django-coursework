@@ -2,8 +2,8 @@ version: '3.8'
 services:
   web:
     build: .
-#    volumes:
-#      - ./coursework:/code
+    volumes:
+      - ./coursework:/code
     ports:
       - "8050:8050"
     env_file:
@@ -24,12 +24,6 @@ services:
       interval: 1s
       timeout: 5s
       retries: 10
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - "8060:8080"
 
 volumes:
   pg-db:

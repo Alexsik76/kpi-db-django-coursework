@@ -10,7 +10,7 @@ class Person(models.Model):
     }
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    gender = models.IntegerField(choices=GENDERS, default=1, verbose_name = _('gender'))
+    gender = models.IntegerField(choices=GENDERS, default=1, verbose_name=_('gender'))
     birth_date = models.DateField(verbose_name = _('date of birth'))
 
     @property

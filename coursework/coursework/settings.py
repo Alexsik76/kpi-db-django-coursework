@@ -84,9 +84,9 @@ WSGI_APPLICATION = 'coursework.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'NAME': 'travel_club_db',
+        'USER': 'db_admin',
+        'PASSWORD': 'password',
         'HOST': '192.168.88.71',
         'PORT': '5444',
     }
@@ -116,6 +116,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'uk'
+
+LOCALE_PATHS = [BASE_DIR / 'coursework' / 'locale',]
 
 TIME_ZONE = 'Europe/Kyiv'
 
