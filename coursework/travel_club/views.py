@@ -27,7 +27,6 @@ def trener_list(request):
     return render(request, 'treners_list.html', {'filter': f})
 
 
-
 def index(request):
     return render(request, 'base.html')
 
