@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 
-from .filters import TouristFilter, CoachFilter
+from .filters import BasePersonFilter
 from .models import Tourist, Sportsman, Coach, Amateur, Person
 
 
@@ -14,16 +14,12 @@ class UmlPageView(TemplateView):
 
 
 def tourist_list(request):
-    field_list = ['first_name', 'last_name', 'gender', 'birth_date']
-    tourists = Tourist.objects.values_list(*field_list)
-    f = TouristFilter(request.GET, queryset=Tourist.objects)
+    f = BasePersonFilter(request.GET, queryset=Tourist.objects)
     return render(request, 'tourists_list.html', {'filter': f})
 
 
 def trener_list(request):
-    field_list = ['first_name', 'last_name', 'gender', 'birth_date', 'salary', 'spec']
-    tourists = Coach.objects.values_list(*field_list)
-    f = CoachFilter(request.GET, queryset=tourists.all())
+    f = BasePersonFilter(request.GET, queryset=Coach.objects)
     return render(request, 'treners_list.html', {'filter': f})
 
 

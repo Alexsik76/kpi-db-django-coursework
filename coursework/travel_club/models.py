@@ -27,6 +27,10 @@ class Person(models.Model):
     def gender_display(self):
         return self.GENDERS[self.gender]
 
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
+
+
 class Tourist(Person):
     group = models.ForeignKey('Group', null=True, blank=True, on_delete=models.SET_NULL)
 
@@ -58,6 +62,9 @@ class Section(models.Model):
     def type_display(self):
         return self.SPECS[self.type]
 
+    def __str__(self):
+        return self.name
+
 class Administration(models.Model):
     section = models.OneToOneField(
         'Section',
@@ -65,6 +72,8 @@ class Administration(models.Model):
         primary_key=True,
     )
 
+    def __str__(self):
+        return str(self.section.name)
 
 class Coach(Tourist):
     SPECS = {
@@ -91,9 +100,13 @@ class Manager(Person):
     salary = models.DecimalField(max_digits=20, decimal_places=2, default=1000)
 
 
+
 class Group(models.Model):
     section = models.ForeignKey('Section', on_delete=models.CASCADE)
     coach = models.ForeignKey('Coach', related_name='groups', null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.section.name
 
 
 class Event(models.Model):
@@ -125,6 +138,11 @@ class Instructor(models.Model):
             models.CheckConstraint(check=models.Q(coach=None) | models.Q(sportsman=None), name="not_both_null"),
         ]
 
+    def __str__(self):
+        if self.coach:
+            return f"{self.coach.last_name}"
+        else:
+            return f"{self.sportsman.last_name}"
 
 class Place(models.Model):
     CATEGORIES = {
